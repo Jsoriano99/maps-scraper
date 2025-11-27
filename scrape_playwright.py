@@ -3,9 +3,10 @@ from urllib.parse import quote_plus
 from datetime import date
 import csv
 import time, random
+import os
 from card_parser import parse_card_html
 
-QUERY = "fisioterapeutas sevilla"
+QUERY = "fontaneros cordoba"
 
 def scrape_page(page, limit_per_page=25):
     page.wait_for_selector("div.VkpGBb", timeout=10000)
@@ -23,9 +24,26 @@ def scrape_page(page, limit_per_page=25):
 
 
 def build_filename(query: str) -> str:
-    base = query.lower().replace(" ", "_")
+    q = query.lower().strip()
+    parts = [p for p in q.split() if p]
+
+    if len(parts) >= 2:
+        city = parts[-1]                # última palabra = ciudad
+        job = " ".join(parts[:-1])      # resto = oficio
+    else:
+        city = "desconocida"
+        job = q or "sin_query"
+
+    job_slug = job.replace(" ", "_")
+    city_slug = city.replace(" ", "_")
     today = date.today().isoformat()
-    return f"leads_{base}_{today}.csv"
+
+    folder = os.path.join("data", job_slug, city_slug)
+    os.makedirs(folder, exist_ok=True)
+
+    filename = f"leads_{today}.csv"
+    return os.path.join(folder, filename)
+
 
 
 def main():

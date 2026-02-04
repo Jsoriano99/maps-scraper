@@ -1,3 +1,4 @@
+# Leer tarjeta de negocio
 import re
 from bs4 import BeautifulSoup
 
@@ -31,11 +32,17 @@ def parse_card_html(card_html: str) -> dict:
     web = next((a["href"] for a in card.find_all("a", href=True) if "Sitio web" in a.get_text()), None) if card else None
 
     if web is None:
-        estado_web = "no_web"
-        prioridad = "alta"
+        estado_web = "sin_web"
+        prioridad = "muy_alta"
     else:
-        estado_web = "desconocido"
-        prioridad = "baja"
+        web_lower = web.lower()
+        if "facebook.com" in web_lower or "instagram.com" in web_lower or "linktr.ee" in web_lower:
+            estado_web = "solo_red_social"
+            prioridad = "alta"
+        else:
+            estado_web = "web_presente"
+            prioridad = "baja"
+
 
     return {
         "nombre": name,

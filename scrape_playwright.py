@@ -6,7 +6,7 @@ import time, random
 import os
 from card_parser import parse_card_html
 
-QUERY = "centro de estetica malaga"
+QUERY = "centro de estetica jaen"
 
 def scrape_page(page, limit_per_page=25):
     page.wait_for_selector("div.VkpGBb", timeout=10000)

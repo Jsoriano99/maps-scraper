@@ -3,7 +3,11 @@ import re
 from bs4 import BeautifulSoup
 
 def parse_card_html(card_html: str) -> dict:
+
+    # Pasamos string HTML y "motor" interprete HTML (convierte a DOM)
     soup = BeautifulSoup(card_html, "html.parser")
+
+    # 1.- Aseguramos que estamos en el div correcto
     card = soup.select_one("div.VkpGBb")
     def safe_text(parent, selector):
         el = parent.select_one(selector) if parent else None
